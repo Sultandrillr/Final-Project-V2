@@ -1,0 +1,98 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\salty> #check rooms
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms" -Method GET
+
+room_id name        created_at
+------- ----        ----------
+      1 Living Room 2026-03-09 08:08:58
+
+
+PS C:\Users\salty> #get living room status
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms/1/state" -Method GET
+
+
+is_on      : True
+hue        : 0
+saturation : 155
+value      : 155
+room_id    : 1
+
+
+
+PS C:\Users\salty> #update living room light
+PS C:\Users\salty> $body = @{ is_on = $false; hue = 20; saturation = 255; value = 255 } | ConvertTo-Json
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms/1/state" -Method POST -Body $body -ContentType "application/json"
+
+message
+-------
+ok
+
+
+PS C:\Users\salty> #verify change to living room
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms/1/state" -Method GET
+
+
+is_on      : False
+hue        : 20
+saturation : 255
+value      : 255
+room_id    : 1
+
+
+
+PS C:\Users\salty> #check motion sensing settings
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms/1/motion" -Method GET
+
+motion_sensing_enabled room_id
+---------------------- -------
+                  True       1
+
+
+PS C:\Users\salty> #turning off motion sensing
+PS C:\Users\salty> $body = @{ motion_sensing_enabled = $false } | ConvertTo-Json
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms/1/motion" -Method POST -Body $body -ContentType "application/json"
+
+message
+-------
+ok
+
+
+PS C:\Users\salty> #verify motion sensing is off
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms/1/motion" -Method GET
+
+motion_sensing_enabled room_id
+---------------------- -------
+                 False       1
+
+
+PS C:\Users\salty> #check room occupancy
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms/1/occupancy" -Method GET
+
+people_count room_id
+------------ -------
+           0       1
+
+
+PS C:\Users\salty> #set occupancy to 1
+PS C:\Users\salty> $body = @{ people_count = 2 } | ConvertTo-Json
+PS C:\Users\salty> $body = @{ people_count = 1 } | ConvertTo-Json
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms/1/occupancy" -Method POST -Body $body -ContentType "application/json"
+
+message
+-------
+ok
+
+
+PS C:\Users\salty> #verify occupancy
+PS C:\Users\salty> Invoke-RestMethod -Uri "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod/rooms/1/occupancy" -Method GET
+
+people_count room_id
+------------ -------
+           1       1
+
+
+PS C:\Users\salty>
