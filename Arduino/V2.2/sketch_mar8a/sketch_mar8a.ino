@@ -9,10 +9,15 @@
 const char* API_BASE = "https://qocfzpp98l.execute-api.eu-west-2.amazonaws.com/prod";
 
 #define DATA_PIN 27
-#define NUM_LEDS 30
+#define NUM_LEDS 72
 CRGB leds[NUM_LEDS];
+int hue;
+int saturation;
+int value;
+bool isOn;
 
 void setup() {
+  
   Serial.begin(115200);
   delay(1000);//does not like when its not there before WiFi.begin
   Connectivity::setup_wifi();
@@ -25,7 +30,7 @@ void setup() {
 }
 
 void loop() {
-  delay(10000);
+  delay(1000);
   HTTPClient http;
   http.begin(String(API_BASE) + "/rooms/1/state");
   int httpcode = http.GET();
@@ -40,10 +45,20 @@ void loop() {
       Serial.println(error.f_str());
       return;
     }
-    int hue = doc["hue"];
-    int saturation = doc["saturation"];
-    int value = doc["value"];
-    bool isOn = doc["is_on"];
+    
+
+    if (hue != doc["hue"]){
+      hue = doc["hue"];
+    }
+    if(saturation != doc["saturation"]){
+      saturation = doc["saturation"];
+    }
+    if(value != doc["value"]){
+      value = doc["value"];
+    }
+    if(isOn != doc["is_on"]){
+      isOn = doc["is_on"];
+    }
     Serial.printf("H:%d S:%d V:%d On:%d\n", hue, saturation, value, isOn);
 
     if(isOn == true){
@@ -55,6 +70,7 @@ void loop() {
       Serial.printf("RGB: R=%d G=%d B=%d\n", rgbColor.r, rgbColor.g, rgbColor.b);
       fill_solid(leds, NUM_LEDS, rgbColor);
       FastLED.show();
+      delay(50);
     }else{
       fill_solid(leds, NUM_LEDS, CRGB::Black);
       FastLED.show();
