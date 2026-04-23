@@ -1,5 +1,5 @@
 #include <WiFi.h>
-#include <HTTPClient.h>
+//#include <HTTPClient.h>
 #include "Connectivity.h"
 
 const char* WIFI_SSID = "BT-2JCPFQ";
