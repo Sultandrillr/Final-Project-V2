@@ -139,7 +139,7 @@ void loop(){
   delay(50);
 }
 void postOccupancy(int number_of_people){
-  WiFIClientSecure client;
+  WiFiClientSecure client;
   client.setCACert(aws_root_ca);
   HTTPClient http;
   http.begin(client, String(API_BASE) + "/rooms/" + room_id + "/occupancy");
@@ -148,7 +148,7 @@ void postOccupancy(int number_of_people){
   http.end();
 }
 JsonDocument GET_Endpoint(int roomID, String endpoint){
-  WiFIClientSecure client;
+  WiFiClientSecure client;
   client.setCACert(aws_root_ca);
   HTTPClient http;
   String url = String(API_BASE) + "/rooms/" + String(roomID) + "/" + endpoint;
@@ -162,7 +162,7 @@ JsonDocument GET_Endpoint(int roomID, String endpoint){
       Serial.println("Json Could not be parsed");
       Serial.println(error.f_str());
     }else{
-    Serial.printf("HTTP %d\n", httpcode);
+    //Serial.printf("HTTP %d\n", httpcode);
   }
   }
   http.end();
